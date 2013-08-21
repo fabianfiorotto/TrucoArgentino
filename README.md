@@ -1,0 +1,4 @@
+TrucoArgentino
+==============
+
+Juego de naipes
