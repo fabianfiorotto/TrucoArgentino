@@ -1,0 +1,14 @@
+.mesa{float:left;width:450px;height:440px;background-image: url("/img/mesa.png");/*background-color:#4f8c42;*/padding-left: 10px;border-radius: 3% 3% 3% 3%;}
+.mesa p {margin-bottom: 0; color: white; font-weight: bold;z-index:-1;}
+.naipes{float: left; width: 365px;height: 230px;padding-left: 10px; padding-top: 10px;}
+.reloj_container{float:left; width: 85px ; padding-top: 50px;}
+.chatbox{float: left; padding: 10px; background-color: #828881;}
+.responses{width: 289px; height: 150px;resize:none;}
+.chat{width: 175px; margin-top: 6px;}
+.puntos{width: 300px; height: 310px;/*background-color:#ba865b;*/background-image: url("/img/madera.png");margin: 10px;}
+.rightpanel{float: left;}
+.pageblock{margin-right: auto; margin-left: auto; width: 1000px;}
+.boton-salir{float:right;}
+body {background-color:#e4d4d4}
+
+.monton{height:190px;}

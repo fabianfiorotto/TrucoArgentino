@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Truco Argentino</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <link href="/stylesheets/page.css"  rel="stylesheet" type="text/css" />
+  <script src="/javascripts/naipes.js"></script>
+  <script src="/javascripts/puntos.js"></script> 
+  <script src="/javascripts/botones.js"></script> 
+  <script src="/javascripts/reloj.js"></script> 
+  <% if @sala.num_jugadores == 4 then %>
+	<link href="/stylesheets/deacuatro.css"  rel="stylesheet" type="text/css" />
+  <% end %>
+</head>
+<body>
+
+
+  <div class="pageblock"> 
+	<div class="boton-salir" > <button id="salir" title="Abandonar la sala">x</button> </div>
+	<div id="mesa" class="mesa"></div>
+	<div class="rightpanel">
+		<div id="puntos" class="puntos">
+			<table style="text-align: center; width: 300px;">
+				<tr>
+				 <td>Yo</td> <td>&Eacute;l/Ella</td>
+				</tr>
+				<tr>
+				 <td id="mis_puntos" >0 Buenas</td> <td id="sus_puntos">0 Malas</td>
+				</tr>
+				<tr>
+					<td> <img class="mis_fosforos" src="fosforos/5.png" style="visibility:hidden;width: 80px;"/></td>
+					<td> <img class="sus_fosforos" src="fosforos/5.png" style="visibility:hidden;width: 80px;"/></td>
+				</tr>
+				<tr>
+					<td> <img class="mis_fosforos" src="fosforos/5.png" style="visibility:hidden;width: 80px;"/></td>
+					<td> <img class="sus_fosforos" src="fosforos/5.png" style="visibility:hidden;width: 80px;"/></td>
+				</tr>
+				<tr>
+					<td> <img class="mis_fosforos" src="fosforos/5.png" style="visibility:hidden;width: 80px;"/></td>
+					<td> <img class="sus_fosforos" src="fosforos/5.png" style="visibility:hidden;width: 80px;"/></td>
+				</tr>
+			</table>
+		</div>
+		<div id="botones" style="text-align:center;">
+			<button id="envido" onclick="cantar('envido');">Envido</button>
+			<button id="flor" onclick="cantar('flor');">Flor</button>
+			<button id="truco" >Truco</button>
+			<br/>
+			<button id="realenvido" onclick="cantar('realenvido');">Real Envido</button>
+			<button id="faltaenvido" onclick="cantar('faltaenvido');">Falta Envido</button>
+			<br/>
+			<div id="jugadasflor" style="display:none;">
+				<button id="meachico" onclick="responder('me achico');" >Me achico</button>
+				<button id="contraflor" onclick="cantar('contraflor');" >Cotraflor</button>
+				<button id="floralresto" onclick="cantar('floralresto');" >Flor al Resto</button>
+			</div>
+			<button id="quiero" onclick="responder('quiero');" style="display:none;">Quiero</button>
+			<button id="noquiero" onclick="responder('no quiero');" style="display:none;">No Quiero</button>
+			<form id="puntosenvido-form" method="post" style="display:inline;" action="console_send" onsubmit="return cantar_puntos(this);" >
+				<label for="puntos" style="display:none;" > Puntos </label>
+				<input id="puntosenvido" type="number" value="0" min="0" max="38" name="puntos" style="width: 50px;display:none;" /> 
+				<input id="puntosenvido-ok" type="submit" value="ok" style="display:none;"/>
+			</form>
+			<button id="sonbuenas" onclick="client_send('>son buenas');" style="display:none;" >Son buenas</button>
+			<br/>
+			<button id="irse" onclick="client_send('>irse');">Irse al maso</button> 		
+		</div>
+	</div>
+  </div>
+  <div style="clear: both;"> </div>
+  <div class="pageblock">
+	  <div id="naipes" class="naipes" ></div>
+	  <div class="reloj_container" > <canvas id="reloj" width="80" height="80"></canvas> </div>
+	  <div class="chatbox">
+		 <form method="POST" id="console" action="console_send" autocomplete="off">
+
+			<textarea id="console-result" class="responses" readonly="readonly"></textarea><br/>
+			<input id="chat" type="text" value="" class="chat" name="chat" />
+			<input type="submit" value="Enviar"/>
+			<button onclick="client_send('>mesa');return false;" title="Muestra estado de la mesa" onmouseover="$(this).html('[#]');" onmouseout="$(this).html('[=]');" >[=]</button>
+		 </form>
+	  </div>
+  </div>
+  <div style="clear: both;"> </div>
+  <div>
+	  <label for="arte-naipe"> Graficos de naipes: </label>
+	  <select id="arte-naipe-selector" name="arte-naipe" >
+		  <option value="heraclio_fournier" > Heraclio Fournier </option>
+		  <option value="justo_rodero" > Justo Rodero </option>
+		  <option value="gabriel_fuentes" selected="selected"> Gabriel Fuentes </option>
+	  </select>
+  </div>
+  <audio id="sound" src="/sounds/boxing-bell-1.ogg" ></audio>
+
+<script type="text/javascript" >
+
+
+	$(document).ready(function(){
+	  $("#console").submit(function(){
+		chat = $(this).find("[name=chat]").val();
+		if(chat == ""){
+			return false;
+		}
+		$("#console-result").append( $(this).find("[name=chat]").val() + "\n");
+		$('#console-result').scrollTop($("#console-result")[0].scrollHeight);
+		$.ajax({
+			url: $(this).attr('action'),
+			type: $(this).attr('method'),
+			data: {chat:  chat},
+			success: function(data,status,xhr){
+			  //$("#console-result").append( data + "\n");	
+			}
+		});
+		$("#chat").val("");
+		return false;
+	  });
+
+	$("#puntosenvido").focus(function(){
+		$("#puntosenvido-ok").show();
+	});
+
+	$.ajax({
+		url: "console_send",
+		type: "post",
+		data: {chat: ">status" }
+	});
+
+
+	$("#salir").click(function(){
+		$.ajax({
+			url: "console_send",
+			type: "post",
+			data: {chat: ">abandonar" },
+			success: function(eo){
+				document.location.href= "/";
+			}
+		});
+	});
+
+	});
+
+
+	if(typeof(EventSource)!=="undefined"){
+	   var source=new EventSource("/stream");
+	   source.onmessage=function(event){
+	
+		j = jQuery.parseJSON(event.data);
+		if(j.message){
+			$("#console-result").append(j.message+"\n");
+		}
+		if(j.naipes){
+			dar_naipes(j.naipes);
+		}
+		if(j.mesa){
+			mostrar_mesa(j.mesa);
+		}
+		if(j.puntos){
+			mostrar_puntos(j.puntos);
+		}
+		if(j.botones){
+			mostrar_botones(j.botones);
+		}
+		if(j.sound){
+			$('#sound').trigger("play");
+		}
+		if(j.turno || j.turno == 0){
+			if(j.turno == "stop"){
+				$("#reloj").stop();
+			}else{
+				if(j.turno > 0 ){
+					$("#reloj").correr_temoporizador(j.turno,60,1);
+				}else{
+					//expulsado!
+				}
+			}
+		}
+		console.log(j);
+
+		$('#console-result').scrollTop($('#console-result')[0].scrollHeight);
+	   };
+	 }else{
+	   document.getElementById("console-result").innerHTML="Sorry, your browser does not support server-sent events...";
+	 }
+
+  function cantar_puntos(form){
+	$("#console-result").append( ">son "+$(form).find("[name=puntos]").val() + "\n");	
+	$('#console-result').scrollTop($('#console-result')[0].scrollHeight);
+	$.ajax({
+			url: $(form).attr('action'),
+			type: $(form).attr('method'),
+			data: {chat: ">son "+$(form).find("[name=puntos]").val() },
+			success: function(data,status,xhr){
+			  //$("#console-result").append( data + "\n");	
+			}
+		});
+	$("#puntosenvido-ok").hide();
+	return false;
+  }
+
+
+  function cantar(jugada){
+	  client_send(">cantar "+jugada);
+  }
+
+  function responder(respuesta){
+		client_send(">responder "+respuesta);
+  }
+  
+  function client_send(message){
+ 	  $("#chat").val(message);
+	  $("#console").submit();
+  }
+
+</script>
+
+
+
+</body>
+</html>

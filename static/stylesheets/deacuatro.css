@@ -1,0 +1,4 @@
+.monton{ height:190px; width:120px; position:relative;float:left; margin-right: 85px;}
+.primera{ z-index:1; }
+.segunda{ position: absolute; top: 60px; left: 20px;z-index:2; }
+.tercera{ position: absolute; top: 80px; left: 45px; z-index:3; }

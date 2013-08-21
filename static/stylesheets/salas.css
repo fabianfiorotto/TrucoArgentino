@@ -1,0 +1,16 @@
+	.fila-sala.selected > div {
+	  background-color: #c6e3f4;
+	}
+
+  .fila-sala > div:first-child {
+	  border-radius: 10px 0 0 10px;
+	  -moz-border-radius: 10px 0 0 10px;
+  	   height: 115px;
+	}
+
+ .fila-sala > div:last-child {
+	  border-radius: 0 10px 10px 0; 
+	  -moz-border-radius: 0 10px 10px 0;
+	  width: 430px;
+	  height: 115px;
+	}

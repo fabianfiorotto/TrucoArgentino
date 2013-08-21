@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title> SALAS </title>
+ <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+ <script type="text/javascript" src="page.js"></script>
+ <link rel="stylesheet" type="text/css" href="stylesheets/page.css"> 
+ <link rel="stylesheet" type="text/css" href="stylesheets/salas.css"> 
+</head>
+<body>
+<div>
+ <div style="display:table;margin-left: auto; margin-right: auto;border-collapse: collapse; ">
+  <% @salas.each_index do |i| %>
+	<% sala = @salas[i] %>
+	<div style="display:table-row;" class="fila-sala" onclick="preguntar_nombre(<%=i+1%>)">
+		<div style="display: table-cell;float:left">
+			<canvas id="sala<%=i+1%>" width="100" height="100"> </canvas>
+		</div>
+		<div style="display: table-cell;float:left">
+			<p style="font-size: x-large; margin-bottom: 0px;" >Sala #<%=i+1%> - <%=sala.num_jugadores%> jugadores</p>
+			<% case sala.jugadores.size 
+			   when 0 then %>
+				<p>La sala esta vac&iacute;a.</p>
+			<% when 1 then %>
+				<p><strong><%=sala.jugadores.first.nombre%></strong> est&aacute; esperando para iniciar una nueva partida.</p>
+			<% when sala.num_jugadores then %>
+				<p>La sala esta llena.</p>
+			<% else %>
+				<p>
+					<% nombre_jugadores = sala.jugadores.map{ | j| "<strong>" + j.nombre + "</strong>" } %>
+					<% ultimo = nombre_jugadores.pop %>
+					<%= ([nombre_jugadores * ", " ,ultimo ] * " y " )%>
+					est&aacute;n esperando para iniciar una nueva partida.
+				</p>
+			<% end %>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			grafico_sala("<%=i+1%>",<%= Float(sala.jugadores.size)/ sala.num_jugadores %>);
+		});
+	</script>
+  <% end %>
+ </div>
+<div>
+
+<div class="chatbox" style="bottom: 0px; position: fixed; right: 58px;" >
+		 <form id="console" onsubmit="chatear();return false;" autocomplete="off">
+
+			<textarea id="console-result" class="responses" readonly="readonly"></textarea><br/>
+			<input id="chat" type="text" value="" class="chat" />
+			<input type="submit" value="Enviar"/>
+			<button onclick="return false;" disabled="disabled" >[=]</button>
+		 </form>
+</div>
+
+ <script type="text/javascript">
+
+	function chatear(){
+	 $("#console-result").append($("#chat").val()+"\n");
+	 $('#console-result').scrollTop($('#console-result')[0].scrollHeight);
+	 $.ajax({
+		url: '/console_send',
+		type: "POST",
+		data: { chat : $("#chat").val() },
+		success: function(data, status, jqXHR ){
+			if($("#chat").val().indexOf(">unirse") == 0){ 
+				setTimeout( function(){location.reload(); } , 2000);
+			}
+			$("#chat").val("");
+		}
+	 });
+	}
+
+	function grafico_sala(numero, fraccion ){
+	  var context = $('#sala'+numero)[0].getContext("2d");
+	  var canvas = $('#sala'+numero)[0]
+      var centerX = canvas.width / 2;
+      var centerY = canvas.height / 2;
+      var radius = 30;
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+      context.fillStyle = '#bccdb9';
+      context.fill();
+      context.lineWidth = 3;
+      context.strokeStyle = '#003300';
+      context.stroke();
+      context.beginPath();
+      context.arc(centerX, centerY, radius, - Math.PI / 2 , - Math.PI / 2 + 2 * Math.PI * fraccion, false);
+	  if(fraccion < 1 && fraccion != 0 ){
+		  context.lineTo(centerX, centerY);
+		  context.lineTo(centerX, centerY-radius);
+	  }
+      context.fillStyle = '#116d02';
+      context.fill();
+      context.lineWidth = 3;
+      context.strokeStyle = '#003300';
+      context.stroke();
+	}
+
+
+	function preguntar_nombre(numero){
+		var nombre = prompt("Ingresá tu nick","");
+		if(nombre != null && nombre != ""){
+			nombre = nombre.replace(/ /g,"_");
+			$("#chat").val(">unirse "+numero+" "+nombre);
+			$("#console").submit();
+		}
+	}
+
+	$(document).ready(function(){
+
+	  $('.fila-sala').bind('mouseover',function(){
+		$(this).addClass('selected');
+	  });
+
+	  $('.fila-sala').bind('mouseout',function(){
+		$(this).removeClass('selected');
+	  });
+
+
+		if(typeof(EventSource)!=="undefined"){
+		   var source=new EventSource("stream");
+		   source.onmessage=function(event){
+			j = jQuery.parseJSON(event.data);
+			if(j.message){
+				$("#console-result").append(j.message+"\n");
+				$('#console-result').scrollTop($('#console-result')[0].scrollHeight);
+			}
+		   };
+		 }else{
+		   document.getElementById("console-result").innerHTML="Sorry, your browser does not support server-sent events...";
+		 }
+
+
+	});
+
+ </script>
+
+</body>
+</html>
