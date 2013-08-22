@@ -21,7 +21,7 @@ class Truco < Jugada
  end
 
  def pisar(mano)
-	flor = mano.jugadas.detect{ | j| j.instance_of?(Flor) ||  (j.cantor.equipo != self.cantor.equipo) }
+	flor = mano.jugadas.detect{ | j| j.instance_of?(Flor) && (j.cantor.equipo != self.cantor.equipo) }
 	flor.aceptada = false unless flor.nil?
  end
  

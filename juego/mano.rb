@@ -44,7 +44,6 @@ class Mano
  end
 
  def cantar(jugador,jugada)
-	jugada.cantor = jugador
 	#la flor no tiene respuesta gana el que la canta salvo. Se responde achicandose o con contra.
 	jugada.equipo_ganador = jugador.equipo if jugada.instance_of?(Flor)
 	@jugadas << jugada

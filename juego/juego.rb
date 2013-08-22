@@ -42,6 +42,7 @@ class Juego
  
  def cantar(jugador,jugada)
   if jugada.class.puede_cantar?(@mano,jugador,true) then
+   jugada.cantor = jugador
    jugada.juego = self
    jugada.pisar(@mano)
    @mano.cantar(jugador,jugada)
