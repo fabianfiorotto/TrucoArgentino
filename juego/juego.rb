@@ -96,6 +96,7 @@ class Juego
 	truco = mano.jugadas.detect{ |j| j.kind_of?(Truco)}
 	if truco.nil? then
 		jugada = IrseAlMaso.new
+		jugada.cantor = jugador
 		jugada.juego = self
 		@mano.cantar(jugador,jugada)
 		jugada.equipo_ganador= jugador.equipo_contrario
