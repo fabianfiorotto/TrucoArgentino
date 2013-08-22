@@ -110,7 +110,7 @@ class Mano
   raise TrucoException , "No te cantaron flor" if flores.empty?
   flores.each do |flor|
 	flor.achicado = true
-	flor.querida = false
+	flor.aceptada = false
   end
  end
 

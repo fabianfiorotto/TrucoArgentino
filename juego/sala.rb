@@ -74,7 +74,7 @@ class Sala
   end
 
   def achicarse(jugador)
-	@juego.achicarse.jugador
+	@juego.achicarse(jugador)
   end
 
   def comenzar

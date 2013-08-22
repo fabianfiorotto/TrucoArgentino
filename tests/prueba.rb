@@ -182,4 +182,19 @@ class TestTruco < Test::Unit::TestCase
 	assert(@sala.juego.numero_puntos(jugador_mano1) == 1 , "El mano deberia haber ganado.")
  end 
  
+ def test_meachico
+ 	mano = @sala.juego.mano
+	forzar_naipes(@jugador1, Naipe[2,:BASTOS] , Naipe[3,:BASTOS] , Naipe[1,:BASTOS] )
+	forzar_naipes(@jugador2, Naipe[2,:ESPADAS] , Naipe[3,:ESPADAS] , Naipe[10,:ESPADAS] )
+	@sala.cantar(@jugador1,Flor.new)
+	@sala.achicarse(@jugador2)
+	@sala.jugar(@jugador1,Naipe[2,:BASTOS])
+	@sala.jugar(@jugador2,Naipe[2,:ESPADAS])
+	@sala.jugar(@jugador1,Naipe[3,:BASTOS])	
+	@sala.jugar(@jugador2,Naipe[3,:ESPADAS])
+	@sala.jugar(@jugador1,Naipe[1,:BASTOS])	
+	@sala.jugar(@jugador2,Naipe[10,:ESPADAS])
+	assert(@sala.juego.numero_puntos(@jugador1) == 5 , "Flor que achica gana 4 puntos.")
+ end
+ 
 end
