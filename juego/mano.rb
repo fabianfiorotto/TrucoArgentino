@@ -26,7 +26,7 @@ class Mano
 		@mesa[ronda][jugador] = naipe
 	end
 	#si jugue un naipe y habia flor cantada la doy por ganada.
-	flor = @jugadas.detect{ |j| j.equipo_ganador.nil? && j.instance_of?(Flor) && j.cantor.equipo != jugador.equipo }
+	flor = @jugadas.detect{ |j| j.aceptada.nil? && j.instance_of?(Flor) && j.cantor.equipo != jugador.equipo }
 	unless flor.nil? then
 		flor.aceptada = false
 		flor.equipo_ganador = jugador.equipo_contrario
