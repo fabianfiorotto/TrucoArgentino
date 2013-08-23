@@ -142,6 +142,14 @@
 
 	if(typeof(EventSource)!=="undefined"){
 	   var source=new EventSource("/stream");
+	   source.onopen = function(){
+		    console.log("conection open");
+		   	$.ajax({
+				url: "console_send",
+				type: "post",
+				data: {chat: ">status" }
+			});
+	   };
 	   source.onmessage=function(event){
 	
 		j = jQuery.parseJSON(event.data);
