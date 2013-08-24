@@ -301,6 +301,7 @@ class Bot
 		 j.server_send(jugador.nombre + " se fue al maso ") unless jugador.id == j.id
 		 jugador.server_change_event sala , :botones , :mesa , :naipes , :puntos
 		 mostrar_naipes(j)
+		 turno j , sala
 	end	
  end
 
