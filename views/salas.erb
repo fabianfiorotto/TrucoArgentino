@@ -72,6 +72,12 @@
 	}
 
 	function grafico_sala(numero, fraccion ){
+	  if(!$('#sala'+numero)[0].getContext){
+		  if(numero == "1" ){
+		   $("#console-result").append("Tu navegador no soporta canvas ¿Has pensado en actualizarlo? \n");
+		  }
+		  return false;
+	  };
 	  var context = $('#sala'+numero)[0].getContext("2d");
 	  var canvas = $('#sala'+numero)[0]
       var centerX = canvas.width / 2;
@@ -128,7 +134,7 @@
 			}
 		   };
 		 }else{
-		   document.getElementById("console-result").innerHTML="Sorry, your browser does not support server-sent events...";
+		   $("#console-result").append("Lo siento, tu navegador no soporta server-sent events... no vas a poder jugar.\n");
 		 }
 
 
