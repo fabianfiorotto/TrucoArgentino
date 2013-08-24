@@ -105,12 +105,16 @@
 
 
 	function preguntar_nombre(numero){
+	  if(typeof(EventSource)!=="undefined"){
 		var nombre = prompt("Ingresá tu nick","");
 		if(nombre != null && nombre != ""){
 			nombre = nombre.replace(/ /g,"_");
 			$("#chat").val(">unirse "+numero+" "+nombre);
 			$("#console").submit();
 		}
+	  }else{
+		alert("Lo siento, pero no vas a poder jugar. Tu navegador no soporta Server-sent events\nTe recomiendo instalar Mozilla Firefox ;) ")	
+	  }
 	}
 
 	$(document).ready(function(){
