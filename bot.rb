@@ -232,9 +232,11 @@ class Bot
 				 mostrar_turno_envido = true
 			end
 		  else
+			 mostrar_turno_envido = false if jugada.kind_of?(Envido)
 			 mensaje += " pero no fue aceptad@"
 		  end
 		else
+		  mostrar_turno_envido = false if jugada.kind_of?(Envido)
 		  mensaje += " pero nadie contestó nada"
 		end
 		jugador.server_send mensaje
