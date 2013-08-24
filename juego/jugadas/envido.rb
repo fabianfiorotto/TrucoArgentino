@@ -51,6 +51,9 @@ class Envido < Jugada
 	no_puede |= mano.jugadas.any?{|e| e.kind_of?(Flor)}
 	raise TrucoException , "Cantaron flor" if no_puede && rexception
 
+	no_puede |= mano.jugadas.any?{|t| t.kind_of?(Truco) && t.cantor.equipo == jugador.equipo }
+	raise TrucoException , "Hay un truco tuyo cantado. Es tarde para el envido." if no_puede && rexception
+
 	return not(no_puede)
  end
 
