@@ -91,7 +91,7 @@ class Sala
   def desempatar(empatados)
 		n1 = @num_jugadores - 1
 		indx  = (@mano..n1).detect { |i| empatados.include?(@jugadores[i]) }
-		indx |= (0..@mano).detect { |i| empatados.include?(@jugadores[i]) }	
+		indx ||= (0..@mano).detect { |i| empatados.include?(@jugadores[i]) }
 		@jugadores[indx]	  
   end
 
