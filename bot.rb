@@ -253,7 +253,7 @@ class Bot
 	else
 		mensaje += "Nuestros puntos: " + sala.juego.puntos(jugador.equipo).to_s
 	end
-	mensaje += "\nSus puntos: " + sala.juego.puntos(jugador.equipo == 1 ? 2 : 1).to_s
+	mensaje += "\nSus puntos: " + sala.juego.puntos(jugador.equipo_contrario).to_s
 	jugador.server_send mensaje
 	jugador.server_change_event sala , :puntos
  end
