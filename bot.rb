@@ -131,12 +131,12 @@ class Bot
 	sala.jugadores.each do  |j|
 		 j.server_send(jugador.nombre + " jugó el "+naipe.to_s) unless jugador.id == j.id
 		 j.server_change_event sala , :mesa 
-		 turno j , sala
 		 if  mano_nueva  then
 			#se dieron las cartas de nuevo
 			 mostrar_naipes(j)
 			j.server_change_event sala , :puntos 
 		 end	
+		 turno j , sala
 	end
 	flornegada = sala.juego.mano.jugadas.detect{ |j| j.cantor == jugador && j.instance_of?(Flor) && j.equipo_ganador != jugador.equipo }
 	if flornegada != nil then
