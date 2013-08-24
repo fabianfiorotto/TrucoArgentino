@@ -1,5 +1,6 @@
 	.fila-sala.selected > div {
 	  background-color: #c6e3f4;
+	  cursor:pointer;
 	}
 
   .fila-sala > div:first-child {
