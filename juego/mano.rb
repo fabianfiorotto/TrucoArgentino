@@ -294,17 +294,23 @@ def falta_cantar_puntos?(jugador = nil)
  end
 
  def se_comio_la_flor?(ronda,jugador)
+  return false unless tiene_flor?(jugador)
   if ronda == 2 then
-	return tiene_flor?(jugador) && @mesa[2][jugador].instance_of?(Naipe) && #si es oculto no cuenta
+	#mostró la flor en la mesa
+	return @mesa[2][jugador].instance_of?(Naipe) && #si es oculto no cuenta
 	not(@jugadas.any?{ |j| 
 		j.instance_of?(ContraFlor) || j.instance_of?(FlorAlResto) ||
 		(j.instance_of?(Flor) && (j.cantor == jugador || j.achicado)) 
 	})
   end
   if ronda == 1 then
-	#TODO detectar segundo caso.
-	#gana el envido con dos cartas pero juega otras dos
-	return false;
+	#ganó el envido pero jugó otras cartas
+	if @jugadas.any?{ | j | j.aceptada && j.kind_of?(Envido) && j.equipo_ganador == jugador.equipo } then
+		if @puntos_envido.values.max == @puntos_envido[jugador] then
+			env1 = 20 + valor(@mesa[0][jugador]) + valor(@mesa[1][jugador])
+			return env1 != @puntos_envido[jugador]
+		end
+	end
   end  
   return false;
  end

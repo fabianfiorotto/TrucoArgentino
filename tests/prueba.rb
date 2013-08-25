@@ -199,4 +199,19 @@ class TestTruco < Test::Unit::TestCase
 	assert(@sala.juego.numero_puntos(@jugador1) == 5 , "Flor que achica gana 4 puntos.")
  end
  
+ def test_florescondida
+	mano = @sala.juego.mano
+	forzar_naipes(@jugador1, Naipe[7,:BASTOS] , Naipe[6,:BASTOS] , Naipe[1,:BASTOS] )
+	forzar_naipes(@jugador2, Naipe[2,:ESPADAS] , Naipe[3,:ESPADAS] , Naipe[10,:COPAS] )
+	@sala.cantar(@jugador1,Envido.new)
+	@sala.responder(@jugador2,true)
+	@sala.cantar_puntos(@jugador1,33)
+	@sala.cantar_puntos(@jugador2,0) #son buenas
+	@sala.jugar(@jugador1 , Naipe[7,:BASTOS] )
+	@sala.jugar(@jugador2 , Naipe[2,:ESPADAS] )
+	@sala.jugar(@jugador2 , Naipe[3,:ESPADAS] )
+	@sala.jugar(@jugador1 , Naipe[1,:BASTOS] ) #tenia que jugar el 6 o irse
+	assert(@sala.juego.numero_puntos(@jugador2) == 3 , "Escondio la flor los puntos son para el oponente.")
+ end
+ 
 end
