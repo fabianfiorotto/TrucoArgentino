@@ -312,6 +312,10 @@ class Bot
 	sala = buscar_sala jugador
 	if args[0] == "meachico" || (args[0] == "me" && args[1] == "achico") then
 		sala.achicarse(jugador)
+		sala.jugadores.each do |j|
+			j.server_send( jugador.nombre + " se achicó con flor" )  unless j === jugador
+		end
+		jugador.server_change_event sala, :botones
 		return;
 	end
 	querido = true if args[0] == "quiero" && args.size == 1
