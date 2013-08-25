@@ -31,7 +31,7 @@ class Mano
 		flor.aceptada = false
 		flor.equipo_ganador = jugador.equipo_contrario
 	end
-	if ronda == 2 && se_comio_la_flor?(jugador) then
+	if se_comio_la_flor?(ronda,jugador) then
 		#Tenia flor y no la canto. punto para el contrario
 		#si se va sin mostrar los naipes zafa (no es un bug)
 		flor = Flor.new
@@ -293,12 +293,20 @@ def falta_cantar_puntos?(jugador = nil)
   } 
  end
 
- def se_comio_la_flor?(jugador)
+ def se_comio_la_flor?(ronda,jugador)
+  if ronda == 2 then
 	return tiene_flor?(jugador) && @mesa[2][jugador].instance_of?(Naipe) && #si es oculto no cuenta
 	not(@jugadas.any?{ |j| 
 		j.instance_of?(ContraFlor) || j.instance_of?(FlorAlResto) ||
 		(j.instance_of?(Flor) && (j.cantor == jugador || j.achicado)) 
 	})
+  end
+  if ronda == 1 then
+	#TODO detectar segundo caso.
+	#gana el envido con dos cartas pero juega otras dos
+	return false;
+  end  
+  return false;
  end
 
 end
