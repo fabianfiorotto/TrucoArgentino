@@ -22,7 +22,11 @@
 		<div id="puntos" class="puntos">
 			<table style="text-align: center; width: 300px;">
 				<tr>
-				 <td>Yo</td> <td>&Eacute;l/Ella</td>
+				  <% if @sala.num_jugadores == 4 then %>
+					<td>Yo</td> <td>&Eacute;l/Ella</td>
+				  <% else %>	
+					<td>Nosotros</td> <td>Ellos</td>
+				  <% end %>
 				</tr>
 				<tr>
 				 <td id="mis_puntos" >0 Buenas</td> <td id="sus_puntos">0 Malas</td>
@@ -137,8 +141,6 @@
 		});
 	});
 
-	});
-
 
 	if(typeof(EventSource)!=="undefined"){
 	   var source=new EventSource("/stream");
@@ -189,6 +191,8 @@
 	   document.getElementById("console-result").innerHTML="Sorry, your browser does not support server-sent events...";
 	 }
 
+	}); //document ready
+	
   function cantar_puntos(form){
 	$("#console-result").append( ">son "+$(form).find("[name=puntos]").val() + "\n");	
 	$('#console-result').scrollTop($('#console-result')[0].scrollHeight);
