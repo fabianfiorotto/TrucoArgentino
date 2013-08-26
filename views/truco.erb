@@ -89,15 +89,15 @@
   <div>
 	  <label for="arte-naipe"> Graficos de naipes: </label>
 	  <select id="arte-naipe-selector" name="arte-naipe" >
-		  <option value="heraclio_fournier" > Heraclio Fournier </option>
-		  <option value="justo_rodero" > Justo Rodero </option>
-		  <option value="gabriel_fuentes" selected="selected"> Gabriel Fuentes </option>
+		  <% @artes.each_pair do |key, value| %>
+		   <% selected = key == session[:arte_naipes] ? 'selected="selected"' : '' %>
+		   <option value="<%=key%>" <%=selected%> > <%=value%> </option>
+		  <% end %> 
 	  </select>
   </div>
   <audio id="sound" src="/sounds/boxing-bell-1.ogg" ></audio>
 
 <script type="text/javascript" >
-
 
 	$(document).ready(function(){
 	  $("#console").submit(function(){
@@ -221,6 +221,9 @@
  	  $("#chat").val(message);
 	  $("#console").submit();
   }
+
+
+  var arte_naipe = $("#arte-naipe-selector").val();
 
 </script>
 

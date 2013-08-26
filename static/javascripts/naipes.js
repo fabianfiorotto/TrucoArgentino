@@ -1,14 +1,22 @@
 
-var arte_naipe = "gabriel_fuentes";
-
  $(document).ready(function(){
+	 
 	$("#arte-naipe-selector").change(function(){
 		arte_naipe = $(this).val();
+
 		$.ajax({
-			url: "console_send",
+			url: "set_arte",
 			type: "post",
-			data: {chat: ">status" }
+			data: {arte_naipes: arte_naipe },
+			success: function(){
+				$.ajax({
+					url: "console_send",
+					type: "post",
+					data: {chat: ">status" }
+				});
+			}
 		});
+
 	});
  });
 

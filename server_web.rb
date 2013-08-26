@@ -16,17 +16,6 @@ class BotWeb < Bot
 	JugadorWeb.new(id) 
   end
 
- def server_event(jugador,event)
-	case event 
-	when 'update_naipes' then 
-		#json = {"naipes" => @jugador.naipes }.to_json 
-		#stream_send(json)
-	when 'update_mesa' then ;;
-	when 'update_puntos' then ;;
-	end
- end
-
-
  end
 ##_
 
@@ -48,6 +37,7 @@ class TrucoArgentino < Sinatra::Base
 
   before do   # Before every request, make sure they get assigned an ID.
     session[:session_id] ||= SecureRandom.uuid
+    session[:arte_naipes] ||= "gabriel_fuentes"
 	$botweb = BotWeb.new if $botweb.nil?
   end
 
@@ -74,6 +64,11 @@ class TrucoArgentino < Sinatra::Base
 	if @sala.nil? then
 		redirect '/'
 	else
+		@artes = {
+			"heraclio_fournier" => "Heraclio Fournier" ,  
+			"justo_rodero" => "Justo Rodero" ,
+			"gabriel_fuentes" => "Gabriel Fuentes" ,
+		}
 		erb :truco
 	end  
   end
@@ -94,8 +89,10 @@ class TrucoArgentino < Sinatra::Base
    end
  end
 
-
-
+ post '/set_arte' do
+	session[:arte_naipes] = params['arte_naipes']
+ end
+ 
 end
 
 if __FILE__ == $0 then
