@@ -9,6 +9,7 @@
 .rightpanel{float: left;}
 .pageblock{margin-right: auto; margin-left: auto; width: 1000px;}
 .boton-salir{float:right;}
+.ayuda{text-decoration: none;cursor:help}
 body {background-color:#e4d4d4}
 
 .monton{height:190px;}
